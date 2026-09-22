@@ -1,11 +1,18 @@
 <template>
-  <div class="panel"><h4>📈 异常分数 (3-sigma + IQR)</h4><div ref="chart" class="chart"></div></div>
+  <div class="panel">
+    <h4>📈 异常分数 (3-sigma + IQR)</h4>
+    <div v-if="stats && !stats.sampleSufficient" class="insufficient">
+      样本不足（完整窗口 {{ stats.fullWindowCount }}/{{ stats.thresholds.minWindows }}）：统计判定不生效，分数统一为 0
+    </div>
+    <div ref="chart" class="chart"></div>
+  </div>
 </template>
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import * as echarts from 'echarts'
 import { useLogStore } from '../store/log'
 const store = useLogStore(); const chart = ref<HTMLDivElement>(); let inst: echarts.ECharts|null=null
+const stats = computed(() => store.result?.detectionStats)
 function update() {
   if (!inst||!store.result) return
   const anoms = store.result.anomalies
@@ -23,4 +30,4 @@ onMounted(()=>{if(chart.value){inst=echarts.init(chart.value);update()}})
 watch(()=>store.result,update)
 onUnmounted(()=>inst?.dispose())
 </script>
-<style scoped>.panel{background:#1e293b;border-radius:8px;padding:12px;border:1px solid #334155}.panel h4{color:#38bdf8;font-size:13px;margin-bottom:4px}.chart{width:100%;height:220px}</style>
+<style scoped>.panel{background:#1e293b;border-radius:8px;padding:12px;border:1px solid #334155}.panel h4{color:#38bdf8;font-size:13px;margin-bottom:4px}.insufficient{color:#fbbf24;font-size:11px;background:#78350f33;border-radius:4px;padding:4px 6px;margin-bottom:4px}.chart{width:100%;height:220px}</style>

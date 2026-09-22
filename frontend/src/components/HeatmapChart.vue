@@ -10,10 +10,10 @@ function update() {
   if (!inst||!store.result) return
   const ws = store.result.windows; const levels = ['INFO','WARN','ERROR','DEBUG']
   const data: [number,number,number][] = []
-  ws.forEach((w,i) => { levels.forEach((lv,j) => { data.push([i,j,w.levels[lv]||0]) }) })
+  ws.forEach((w) => { levels.forEach((lv,j) => { data.push([w.index,j,w.levels[lv]||0]) }) })
   inst.setOption({
     backgroundColor:'transparent',grid:{left:60,right:15,top:5,bottom:25},
-    xAxis:{type:'category',data:ws.map((_,i)=>'W'+i),axisLabel:{color:'#94a3b8',fontSize:8}},
+    xAxis:{type:'category',data:ws.map(w=>'W'+w.index),axisLabel:{color:'#94a3b8',fontSize:8}},
     yAxis:{type:'category',data:levels,axisLabel:{color:'#94a3b8',fontSize:9}},
     visualMap:{min:0,max:Math.max(...data.map(d=>d[2]),1),inRange:{color:['#1e293b','#fef08a','#ef4444']},calculable:false,show:false},
     series:[{type:'heatmap',data,label:{show:true,fontSize:8,color:'#94a3b8'}}],animation:false

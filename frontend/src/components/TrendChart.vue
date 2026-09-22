@@ -11,7 +11,7 @@ function update() {
   const ws = store.result.windows
   inst.setOption({
     backgroundColor:'transparent',grid:{left:40,right:15,top:10,bottom:25},
-    xAxis:{type:'category',data:ws.map((_,i)=>'W'+i),axisLabel:{color:'#94a3b8',fontSize:9}},
+    xAxis:{type:'category',data:ws.map(w=>'W'+w.index),axisLabel:{color:'#94a3b8',fontSize:9}},
     yAxis:{type:'value',axisLabel:{color:'#94a3b8'}},
     series:[{
       type:'bar',data:ws.map(w=>w.count),itemStyle:{color:'#38bdf8'},
